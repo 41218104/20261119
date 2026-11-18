@@ -7,10 +7,12 @@
 ```powershell
 cd D:\20261112
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --port 8000
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --port 8001
 ```
 
-OpenAPI 文件：<http://127.0.0.1:8000/docs>
+OpenAPI 文件：<http://127.0.0.1:8001/docs>
+
+> 使用 8001 而非 8000，避免 OpenCode 背景服務自動探測 8000 的 `/v1/models` 造成干擾。
 
 ## 執行測試
 
@@ -34,7 +36,7 @@ OpenAPI 文件：<http://127.0.0.1:8000/docs>
 建立範例：
 
 ```bash
-curl -X POST http://127.0.0.1:8000/objects \
+curl -X POST http://127.0.0.1:8001/objects \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Cube",
@@ -57,7 +59,7 @@ D:\20261112
 │   ├── compare.md           # Part B 並行比較表
 │   ├── reflection.md        # 反思報告
 │   └── security-review.md   # OWASP 資安審查與修正紀錄
-├── tests/                   # 16 個自動化測試
+├── tests/                   # 20 個自動化測試
 ├── pyproject.toml
 └── requirements.txt
 ```
