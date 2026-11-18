@@ -1,18 +1,22 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, Field, HttpUrl
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl, model_validator
 
 
 class Vector3(BaseModel):
-    x: float
-    y: float
-    z: float
+    model_config = ConfigDict(extra="forbid")
+
+    x: float = Field(allow_inf_nan=False)
+    y: float = Field(allow_inf_nan=False)
+    z: float = Field(allow_inf_nan=False)
 
 
 class ScaleVector(BaseModel):
-    x: float = Field(gt=0)
-    y: float = Field(gt=0)
-    z: float = Field(gt=0)
+    model_config = ConfigDict(extra="forbid")
+
+    x: float = Field(gt=0, allow_inf_nan=False)
+    y: float = Field(gt=0, allow_inf_nan=False)
+    z: float = Field(gt=0, allow_inf_nan=False)
 
 
 class ObjectBase(BaseModel):
@@ -36,6 +40,16 @@ class ObjectUpdate(BaseModel):
     position: Vector3 | None = None
     rotation: Vector3 | None = None
     scale: ScaleVector | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def reject_explicit_none(cls, values):
+        """明確傳 null 視為無效更新，避免把 None 寫進 NOT NULL 欄位。"""
+        if isinstance(values, dict):
+            for key, value in values.items():
+                if value is None:
+                    raise ValueError(f"{key} 不可為 null")
+        return values
 
 
 class ObjectOut(ObjectBase):

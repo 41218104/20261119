@@ -1,3 +1,6 @@
+import json
+import math
+
 from fastapi.testclient import TestClient
 
 
@@ -149,3 +152,41 @@ def test_delete_missing_object_returns_404(client):
 def test_extra_field_rejected(client):
     response = create(client, color="red")
     assert response.status_code == 422
+
+
+# 17. 明確傳 null → 422（不再造成 500）
+def test_explicit_null_update_rejected(client):
+    created = create(client).json()
+    response = client.put(f"/objects/{created['id']}", json={"name": None})
+    assert response.status_code == 422
+
+
+# 18. nan / inf → 422（直接送 JSON 字串，避開 httpx 用戶端序列化限制）
+def test_non_finite_vector_rejected(client):
+    headers = {"Content-Type": "application/json"}
+
+    body = json.dumps(payload(position={"x": math.nan, "y": 0.0, "z": 0.0}))
+    response = client.post("/objects", content=body, headers=headers)
+    assert response.status_code == 422
+
+    body = json.dumps(payload(scale={"x": math.inf, "y": 1.0, "z": 1.0}))
+    response = client.post("/objects", content=body, headers=headers)
+    assert response.status_code == 422
+
+
+# 19. 巢狀額外欄位 → 422
+def test_nested_extra_field_rejected(client):
+    position = {"x": 0.0, "y": 0.0, "z": 0.0, "w": 1.0}
+    response = create(client, position=position)
+    assert response.status_code == 422
+
+
+# 20. 分頁 limit / skip
+def test_pagination(client):
+    for name in ("A", "B", "C"):
+        create(client, name=name)
+    response = client.get("/objects", params={"skip": 1, "limit": 1})
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 1
+    assert data[0]["name"] == "B"

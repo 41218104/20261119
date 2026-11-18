@@ -18,7 +18,7 @@ OpenAPI 文件：<http://127.0.0.1:8000/docs>
 .\.venv\Scripts\python.exe -m pytest
 ```
 
-目前結果：**16 passed**。
+目前結果：**20 passed**。資安審查與修正紀錄見 `docs/security-review.md`。
 
 ## API
 
@@ -55,7 +55,8 @@ D:\20261112
 ├── docs/
 │   ├── spec.md              # Part A 架構規格
 │   ├── compare.md           # Part B 並行比較表
-│   └── reflection.md        # 反思報告
+│   ├── reflection.md        # 反思報告
+│   └── security-review.md   # OWASP 資安審查與修正紀錄
 ├── tests/                   # 16 個自動化測試
 ├── pyproject.toml
 └── requirements.txt

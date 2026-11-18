@@ -9,6 +9,9 @@ permissions:
   - action: edit
     resource: "*"
     effect: deny
+  - action: edit
+    resource: "docs/security-review.md"
+    effect: allow
   - action: shell
     resource: "*"
     effect: deny

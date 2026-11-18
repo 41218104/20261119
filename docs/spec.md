@@ -83,7 +83,7 @@ API 必須支援 `/objects` 的 CRUD，具備輸入驗證，並有至少 10 個�
 | 方法 | 路徑 | 成功 | 說明 |
 |---|---|---|---|
 | GET | `/health` | 200 | 健康檢查，回 `{"status":"ok"}` |
-| GET | `/objects` | 200 | 列出全部物件 |
+| GET | `/objects` | 200 | 列出物件，支援 `skip`（≥0）與 `limit`（1–1000，預設 100）分頁 |
 | POST | `/objects` | 201 | 建立物件，回傳完整物件 |
 | GET | `/objects/{id}` | 200 | 取得單一物件；不存在回 404 |
 | PUT | `/objects/{id}` | 200 | 部分更新；不存在回 404 |
@@ -95,7 +95,7 @@ API 必須支援 `/objects` 的 CRUD，具備輸入驗證，並有至少 10 個�
 { "detail": "Object 99 not found" }
 ```
 
-驗證失敗由 FastAPI/Pydantic 回傳 422，含欄位層級錯誤。
+驗證失敗由 FastAPI/Pydantic 回傳 422，含欄位層級錯誤。所有 CRUD 路由皆宣告 `response_model`；明確傳 `null`、額外欄位、`nan`/`inf` 一律回 422。資安修正紀錄見 `docs/security-review.md`。
 
 ---
 
@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS objects (
 | team/tester | ✔ | `tests/**` | ✔ | 可跑測試，不改功能碼 |
 | team/reviewer | ✔ | ✘ | ✘ | 客觀審查 |
 | team/doc-writer | ✔ | `README.md`、`docs/**`（spec 除外） | ✘ | 文件 |
-| team/security | ✔ | ✘ | ✘ | OWASP 檢查（加分題） |
+| team/security | ✔ | `docs/security-review.md` | ✘ | OWASP 檢查（加分題，只寫審查報告） |
 
 規則由上往下比對，最後符合者生效：先 deny 全部，再開放特定路徑。
 

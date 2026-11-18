@@ -68,9 +68,12 @@ def _to_dict(row: sqlite3.Row) -> dict[str, Any]:
     }
 
 
-def list_objects() -> list[dict[str, Any]]:
+def list_objects(skip: int = 0, limit: int = 100) -> list[dict[str, Any]]:
     with _lock:
-        rows = _connect().execute("SELECT * FROM objects ORDER BY id").fetchall()
+        rows = _connect().execute(
+            "SELECT * FROM objects ORDER BY id LIMIT ? OFFSET ?",
+            (limit, skip),
+        ).fetchall()
     return [_to_dict(row) for row in rows]
 
 
@@ -115,15 +118,22 @@ def update_object(object_id: int, payload: ObjectUpdate) -> dict[str, Any] | Non
     if not changes:
         return get_object(object_id)
 
+    # 白名單：欄位名永遠由程式碼決定，不接受模型以外的值。
+    allowed_columns = {
+        "name": lambda v: v,
+        "model_url": lambda v: str(v),
+        "position": json.dumps,
+        "rotation": json.dumps,
+        "scale": json.dumps,
+    }
+
     columns: list[str] = []
     values: list[Any] = []
     for key, value in changes.items():
-        if key in {"position", "rotation", "scale"}:
-            value = json.dumps(value)
-        elif key == "model_url":
-            value = str(value)
+        if key not in allowed_columns:
+            continue
         columns.append(f"{key} = ?")
-        values.append(value)
+        values.append(allowed_columns[key](value))
 
     values.append(_now())
     values.append(object_id)
