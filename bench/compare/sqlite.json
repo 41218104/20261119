@@ -1,0 +1,23 @@
+{
+  "option": "SQLite",
+  "summary": "嵌入式單檔資料庫，安裝即用地適合中小型 XR 物件 CRUD API，但並發寫入與空間查詢能力有限。",
+  "scores": {
+    "setup_complexity": {"score": 5, "note": "Python 內建 sqlite3，無需額外伺服器，幾乎零設定。"},
+    "runtime_performance": {"score": 4, "note": "本機讀寫延遲極低、無網路開銷；但同時寫入需序列化，高並發下受限。"},
+    "deployment": {"score": 5, "note": "單一檔案即可部署與備份，無需獨立資料庫服務或維運。"},
+    "schema_flexibility": {"score": 4, "note": "支援 JSON 欄位與 ALTER TABLE，彈性尚可；相較文件資料庫仍偏結構化。"},
+    "ecosystem": {"score": 5, "note": "與 FastAPI、SQLAlchemy、pytest 整合成熟，可用記憶體資料庫快速測試。"},
+    "xr_fit": {"score": 4, "note": "欄位對應直觀、CRUD 契合；缺乏原生空間索引，多人即時同步較吃力。"}
+  },
+  "pros": [
+    "零安裝設定，Python 標準庫直接可用",
+    "單檔部署與備份簡單，適合容器與邊緣環境",
+    "讀取延遲低，pytest 可用 :memory: 快速自動化測試"
+  ],
+  "cons": [
+    "並發寫入效能受限，不適合高同時連線",
+    "無內建空間查詢／索引，XR 位置運算需額外處理",
+    "單機檔案，跨裝置或多實例共享不如客戶端—伺服器資料庫"
+  ],
+  "recommendation": "若為單機或中小型 XR 場景管理 API 可優先選用；若需多人即時協作與空間查詢，則考慮 PostgreSQL + PostGIS。"
+}

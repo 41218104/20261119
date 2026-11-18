@@ -1,0 +1,41 @@
+{
+  "option": "MongoDB",
+  "summary": "彈性文件資料庫，適合快速迭代的 XR 物件 CRUD，但相較內嵌方案增加部署與維運成本。",
+  "scores": {
+    "setup_complexity": {
+      "score": 4,
+      "note": "需另行安裝與啟動 MongoDB 服务，設定連線與憑證，較 SQLite 繁瑣。"
+    },
+    "runtime_performance": {
+      "score": 4,
+      "note": "讀寫延遲低，索引完善；但網路往返與文件開銷略高於本地 SQLite。"
+    },
+    "deployment": {
+      "score": 3,
+      "note": "需獨立資料庫服務或託管 Atlas，容器化可行但部署與維運較複雜。"
+    },
+    "schema_flexibility": {
+      "score": 5,
+      "note": "無_schema 文件模型，易於擴充 XR 物件的材質、動畫等欄位。"
+    },
+    "ecosystem": {
+      "score": 5,
+      "note": "PyMongo 與 Motor、Beanie 等整合成熟，搭配 FastAPI 與 pytest 方便。"
+    },
+    "xr_fit": {
+      "score": 4,
+      "note": "自然映射物件 JSON（名稱、網址、位置、旋轉、縮放），適合場景資料儲存。"
+    }
+  },
+  "pros": [
+    "文件結構彈性，易於對應 3D 物件的階層與自訂屬性",
+    "Python 驅動成熟，非同步整合 FastAPI 順暢",
+    "水平擴充與 Atlas 託管方案完善"
+  ],
+  "cons": [
+    "需額外部署與管理資料庫服務，增加維運負擔",
+    "本地開發與測試需啟動實例或搭配 mongomock",
+    "相較 SQLite 有網路延遲與資源開銷"
+  ],
+  "recommendation": "若重視欄位彈性與未來擴充可選 MongoDB；小型原型或單機部署則 SQLite 更輕量。"
+}

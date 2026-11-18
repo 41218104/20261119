@@ -1,0 +1,41 @@
+{
+  "option": "PostgreSQL",
+  "summary": "PostgreSQL 在可靠性與 JSONB 彈性上很適合 XR 物件 CRUD，但部署與維運成本高於輕量方案。",
+  "scores": {
+    "setup_complexity": {
+      "score": 3,
+      "note": "需安裝/執行資料庫服務與連線、遷移；Docker 或託管可簡化，但仍比 SQLite 麻煩。"
+    },
+    "runtime_performance": {
+      "score": 4,
+      "note": "索引與 JSONB 查詢快、CRUD 延遲低；仍有網路往返，延遲略高於嵌入式 SQLite。"
+    },
+    "deployment": {
+      "score": 3,
+      "note": "需管理資料庫服務、備份與連線池；容器/雲端 PostgreSQL 可行但較檔案型儲存複雜。"
+    },
+    "schema_flexibility": {
+      "score": 5,
+      "note": "JSONB 可存非固定 XR 屬性，搭配 GIN 索引與結構欄位，彈性高。"
+    },
+    "ecosystem": {
+      "score": 5,
+      "note": "SQLAlchemy、asyncpg/psycopg 與 FastAPI/Pydantic、pytest 整合成熟。"
+    },
+    "xr_fit": {
+      "score": 4,
+      "note": "座標/旋轉/縮放可用數值或 JSONB 儲存，交易與空間查詢穩健；無內建 3D 索引。"
+    }
+  },
+  "pros": [
+    "ACID 交易與成熟索引，適合多使用者並行 CRUD 與資料一致性。",
+    "JSONB 兼顧固定欄位與彈性 XR 自訂屬性，可用 GIN 索引查詢。",
+    "FastAPI + SQLAlchemy/asyncpg + pytest 整合成熟，必要時可加 PostGIS 做空間查詢。"
+  ],
+  "cons": [
+    "需額外部署與維運資料庫服務，輕量原型成本高於嵌入式方案。",
+    "每次 API 請求都有網路與連線池開銷，純 CRUD 延遲不若嵌入式資料庫。",
+    "3D 幾何/空間運算需自行建模或依賴 PostGIS，學習與設定成本較高。"
+  ],
+  "recommendation": "若重視一致性、彈性屬性與擴充性，推薦 PostgreSQL；純原型可先 SQLite 再遷移。"
+}
