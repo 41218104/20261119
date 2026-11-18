@@ -20,7 +20,7 @@ OpenAPI 文件：<http://127.0.0.1:8001/docs>
 .\.venv\Scripts\python.exe -m pytest
 ```
 
-目前結果：**20 passed**。資安審查與修正紀錄見 `docs/security-review.md`。
+目前結果：**20 passed**。
 
 ## API
 
@@ -54,11 +54,6 @@ D:\20261112
 ├── .opencode/agents/team/   # Subagent 定義（architect / coder / tester / reviewer / doc-writer / security）
 ├── app/                     # FastAPI 應用程式
 ├── bench/compare/           # Part B 三個子代理的原始 JSON 回報
-├── docs/
-│   ├── spec.md              # Part A 架構規格
-│   ├── compare.md           # Part B 並行比較表
-│   ├── reflection.md        # 反思報告
-│   └── security-review.md   # OWASP 資安審查與修正紀錄
 ├── tests/                   # 20 個自動化測試
 ├── pyproject.toml
 └── requirements.txt
@@ -78,5 +73,4 @@ $env:XR_DB_PATH = "D:\20261112\custom.db"
 
 ## 注意事項
 
-- 繳交所需的「主 Agent 派工畫面」與「至少 2 個子代理子 session」截圖需由你在 OpenCode 介面自行擷取；文字記錄已寫在 `docs/compare.md`。
-- 反思報告中的時間與 token 比較為模板，實際數值請依你的 OpenCode 工作階段填入。
+- 報告與執行截圖已另行整理，不存放在本 repo。
